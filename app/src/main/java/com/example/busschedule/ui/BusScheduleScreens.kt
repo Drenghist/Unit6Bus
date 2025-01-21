@@ -72,12 +72,15 @@ enum class BusScheduleScreens {
 
 @Composable
 fun BusScheduleApp(
-    viewModel: BusScheduleViewModel = viewModel(factory = BusScheduleViewModel.factory)
+    viewModel: BusScheduleViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val navController = rememberNavController()
     val fullScheduleTitle = stringResource(R.string.full_schedule)
     var topAppBarTitle by remember { mutableStateOf(fullScheduleTitle) }
-    val fullSchedule by viewModel.getFullSchedule().collectAsState(emptyList())
+    val scheduleUiState by viewModel.scheduleUiState.collectAsState()
+
+    // Me quedo aquí, pendiente de ver qué hago con el UIState que tiene la DB
+    //val fullSchedule by viewModel.getFullSchedule().collectAsState(emptyList())
     val onBackHandler = {
         topAppBarTitle = fullScheduleTitle
         navController.navigateUp()

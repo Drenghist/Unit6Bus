@@ -15,43 +15,36 @@
  */
 package com.example.busschedule.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.viewModelScope
 import com.example.busschedule.data.BusSchedule
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
-class BusScheduleViewModel: ViewModel() {
+import com.example.busschedule.data.SchedulesRepository
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
-    // Get example bus schedule
-    fun getFullSchedule(): Flow<List<BusSchedule>> = flowOf(
-        listOf(
-            BusSchedule(
-                1,
-                "Example Street",
-                0
+
+class BusScheduleViewModel (private val schedulesRepository: SchedulesRepository) : ViewModel() {
+
+    val scheduleUiState: StateFlow<ScheduleUiState> =
+        schedulesRepository.getAllSchedulesStream().map {ScheduleUiState(it)}
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = ScheduleUiState()
             )
-        )
-    )
-
-    // Get example bus schedule by stop
-    fun getScheduleFor(stopName: String): Flow<List<BusSchedule>> = flowOf(
-        listOf(
-            BusSchedule(
-                1,
-                "Example Street",
-                0
-            )
-        )
-    )
-
     companion object {
-        val factory : ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                BusScheduleViewModel()
-            }
-        }
+        private const val TIMEOUT_MILLIS = 5_000L
     }
+
+
+
 }
+
+data class ScheduleUiState(val scheduleList: List<BusSchedule> = listOf())

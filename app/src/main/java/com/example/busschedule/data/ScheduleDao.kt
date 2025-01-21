@@ -24,6 +24,6 @@ interface ScheduleDao {
     @Query("SELECT * from schedule WHERE id = :id")
     fun getSchedule(id: Int): Flow<BusSchedule>
 
-    @Query("SELECT * from schedule ORDER BY stopName ASC")
+    @Query("SELECT * from schedule ORDER BY arrivalTimeInMillis ASC")
     fun getAllSchedules(): Flow<List<BusSchedule>>
 }
