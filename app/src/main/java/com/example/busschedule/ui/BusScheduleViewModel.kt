@@ -33,17 +33,16 @@ import kotlinx.coroutines.flow.stateIn
 class BusScheduleViewModel (private val schedulesRepository: SchedulesRepository) : ViewModel() {
 
     val scheduleUiState: StateFlow<ScheduleUiState> =
-        schedulesRepository.getAllSchedulesStream().map {ScheduleUiState(it)}
+        schedulesRepository.getAllSchedulesStream().map { ScheduleUiState(it) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = ScheduleUiState()
             )
+
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L
     }
-
-
 
 }
 

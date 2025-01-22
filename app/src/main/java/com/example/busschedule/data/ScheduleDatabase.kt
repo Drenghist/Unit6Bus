@@ -16,6 +16,7 @@ abstract class ScheduleDatabase: RoomDatabase() {
         fun getDatabase(context: Context): ScheduleDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, ScheduleDatabase::class.java, "schedule_database")
+                    //.createFromAsset("database/bus_schedule.db")
                     .build()
                     .also{Instance = it}
             }

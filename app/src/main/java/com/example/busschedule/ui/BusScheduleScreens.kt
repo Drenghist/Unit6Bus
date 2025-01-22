@@ -101,7 +101,7 @@ fun BusScheduleApp(
         ) {
             composable(BusScheduleScreens.FullSchedule.name) {
                 FullScheduleScreen(
-                    busSchedules = fullSchedule,
+                    busSchedules = scheduleUiState.scheduleList,
                     contentPadding = innerPadding,
                     onScheduleClick = { busStopName ->
                         navController.navigate(
@@ -118,10 +118,10 @@ fun BusScheduleApp(
             ) { backStackEntry ->
                 val stopName = backStackEntry.arguments?.getString(busRouteArgument)
                     ?: error("busRouteArgument cannot be null")
-                val routeSchedule by viewModel.getScheduleFor(stopName).collectAsState(emptyList())
+                //val routeSchedule by viewModel.getScheduleFor(stopName).collectAsState(emptyList())
                 RouteScheduleScreen(
                     stopName = stopName,
-                    busSchedules = routeSchedule,
+                    busSchedules = scheduleUiState.scheduleList,
                     contentPadding = innerPadding,
                     onBack = { onBackHandler() }
                 )
